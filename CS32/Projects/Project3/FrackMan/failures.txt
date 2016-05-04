@@ -1,0 +1,255 @@
+switch(dir)
+{
+	case left:
+		if (getWorld()->isInBounds(x-1, y))
+			moveTo(x-1, y);
+		break;
+	case right:
+		if (getWorld()->isInBounds(x+1, y))
+			moveTo(x+1, y);
+		break;
+	case up:
+		if (getWorld()->isInBounds(x, y+1))
+			moveTo(x, y+1);
+		break;
+	case down:
+		if (getWorld()->isInBounds(x, y-1))
+			moveTo(x, y-1);
+		break;
+	case none:
+		break;
+}
+
+if (isDirtHere(x, y))
+{
+	// if (m_dirtObjs[x][y]->isVisible() == true)		// WRONG
+	// 	playSound(SOUND_DIG);
+	cout << x << " -- " << y << endl;
+	m_dirtObjs[x][y]->setVisible(false);
+}
+
+bool StudentWorld::isSquirtAbleToMove(int x, int y, GraphObject::Direction dir)		// Checks to see if next squirt move is in bounds and that nothing is obstructing its path
+{
+	if (m_travelDist != 0 && !(isDirtOrBoulderInPath(x, y, dir)))
+	{
+		if (dir == left && isInBounds(x-1, y)) return true;
+		if (dir == right && isInBounds(x+4, y)) return true;
+		if (dir == up && isInBounds(x, y+4)) return true;
+		if (dir == down && isInBounds(x, y-1)) return true;
+	}
+	return false;
+}
+
+bool StudentWorld::isDirtOrBoulderInPath(int x, int y, GraphObject::Direction dir)
+{
+	for (int k = 0; k < 4; k++)
+	{
+		if (dir == GraphObject::left && (isDirtHere(x-1, y+k) || isObjThere<Boulder>(x-1, y+k))) return true;
+		if (dir == GraphObject::right && (isDirtHere(x+4, y+k) || isObjThere<Boulder>(x+4, y+k))) return true;
+		if (dir == GraphObject::up && (isDirtHere(x+k, y+4) || isObjThere<Boulder>(x+k, y+4))) return true;
+		if (dir == GraphObject::down && (isDirtHere(x+k, y-1) || isObjThere<Boulder>(x+k, y-1))) return true;
+	}
+	return false;
+}
+
+for (vector<Actor*>::iterator x = m_actor.begin(); x != m_actor.end(); ++x)
+{
+	delete *x;
+	x = --m_actor.erase(x);			// CHECK AGAIN
+}
+
+for (vector<vector<Dirt*>>::iterator i = m_dirtObjs.begin(); i != m_dirtObjs.end(); ++i)
+{
+	for (vector<Dirt*>::iterator j = (*i).begin(); j != (*i).end(); ++j)
+	{
+		delete *j;
+		j = --(*i).erase(j);
+	}
+}
+
+for (int i = 0; i < m_actor.size(); i++) {
+	if ((xRand >= 25 && xRand <= 38) || distBetween(m_actor[i]->getX(), m_actor[i]->getY(), xRand, yRand) <= 6.0)
+	{ 
+		cout << "HAH redo it: ";
+		xRand = rand() % (60 + 1);
+		yRand = 20 + (rand() % (56 - 20 + 1));
+		i = 0;
+		cout << xRand << ", " << yRand << endl;
+	}
+}
+
+
+if (!isVisible() && getWorld()->nearestObjDist<FrackMan>(getX(), getY()) <= 4.0)
+{
+	setVisible(true);
+	return;
+}
+
+
+int r = rand() % 5;
+switch(r) {
+	case 0:
+	default:
+}
+
+int g = 10;
+int r = rand() % 10;
+int c = 0;
+for (int i = 0; i < 100000; i++)
+	c += (rand() % 10 == 0);
+
+
+write a function that tells you how far away the nearest type of an object is
+for example you want to ask 'how far away is the nearest boulder'?
+use a template function
+
+void StudentWorld::illuminateAroundFrackMan()
+{
+	for (vector<Actor*>::iterator k = m_actor.begin(); k != m_actor.end(); ++k)
+		if (dynamic_cast<T*>(*k) && && (*k) distBetween((*k)->getX(), (*k)->getY(), m_FrackManPlayer->getX(), m_FrackManPlayer->getY()) <= 12.0)
+			(*k)->setVisible(true);
+}
+
+
+
+bool Protester::isDirBlocked(Direction dir) const
+{
+	int x = getX();
+	int y = getY();
+
+	if (dir == left)
+	{
+		for (int k = 0; k < 4; k++)
+			if (!getWorld()->isInBounds(x-1, y) || getWorld()->isDirtHere(x-1, y+k) || getWorld()->isObjThere<Boulder>(x-1,y+k))		
+			{	
+				cout << "left: " << getWorld()->isInBounds(x-1, y+k) << endl;
+				return true;
+			}
+	}
+	 if (dir == right)
+	 {
+	 	for (int k = 0; k < 4; k++)
+	 		if (!getWorld()->isInBounds(x+4, y) || getWorld()->isDirtHere(x+4, y+k) || getWorld()->isObjThere<Boulder>(x+4,y+k))		
+	 		{
+	 			cout << "right: " << getWorld()->isInBounds(x+4, y+k) << endl;
+	 			return true;
+	 		}
+	 }
+	 if (dir == up)
+	 {
+	 	for (int k = 0; k < 4; k++)
+	 		if (!getWorld()->isInBounds(x, y+4) || getWorld()->isDirtHere(x+k, y+4) || getWorld()->isObjThere<Boulder>(x+k,y+4))		
+	 		{
+	 			cout << "up: " << getWorld()->isInBounds(x+k, y+4) << endl;
+	 			return true;
+	 		}
+	 }
+	 if (dir == down)
+	 {
+	 	for (int k = 0; k < 4; k++)
+	 		if (!getWorld()->isInBounds(x, y-1) || getWorld()->isDirtHere(x+k, y-1) || getWorld()->isObjThere<Boulder>(x+k,y-1))	
+	 		{
+	 			cout << "down: " << getWorld()->isInBounds(x+k, y-1) << endl;
+	 			return true;
+	 		}
+	}
+	return false;
+}
+
+
+bool Actor::isDirtInDir(GraphObject::Direction dir) const
+{
+	int x = getX();
+	int y = getY();
+
+	for (int k = 0; k < 4; k++)
+	{
+		if (dir == GraphObject::left && getWorld()->isDirtHere(x-1, y+k)) return true;
+		if (dir == GraphObject::right && getWorld()->isDirtHere(x+4, y+k)) return true;
+		if (dir == GraphObject::up && getWorld()->isDirtHere(x+k, y+4)) return true;
+		if (dir == GraphObject::down && getWorld()->isDirtHere(x+k, y-1)) return true;
+	}
+	return false;
+}
+
+
+
+
+
+
+
+
+
+bool Protester::getWorld()->isDirBlocked(getX(), getY(), Direction dir) const
+{
+	int x = getX();
+	int y = getY();
+
+	for (int k = 0; k < 4; k++)
+	{
+		if (dir == left)
+		{
+			if (!getWorld()->isInBounds(x-1, y) || getWorld()->isDirtInDir(left) || getWorld()->isObjThere<Boulder>(x-1,y+k))	// getWorld()->isDirtHere(x-1, y+k)	
+			{	
+				//cout << "left: " << getWorld()->isInBounds(x-1, y+k) << endl;
+				return true;
+			}
+		}
+		 if (dir == right)
+		 {
+	 		if (!getWorld()->isInBounds(x+4, y) || getWorld()->isDirtInDir(right) || getWorld()->isObjThere<Boulder>(x+4,y+k))		// getWorld()->isDirtHere(x+4, y+k)
+	 		{
+	 			//cout << "right: " << getWorld()->isInBounds(x+4, y+k) << endl;
+	 			return true;
+	 		}
+		 }
+		 if (dir == up)
+		 {
+	 		if (!getWorld()->isInBounds(x, y+4) || getWorld()->isDirtInDir(up) || getWorld()->isObjThere<Boulder>(x+k,y+4))		// getWorld()->isDirtHere(x+k, y+4)
+	 		{
+	 			//cout << "up: " << getWorld()->isInBounds(x+k, y+4) << endl;
+	 			return true;
+	 		}
+		 }
+		 if (dir == down)
+		 {
+	 		if (!getWorld()->isInBounds(x, y-1) || getWorld()->isDirtInDir(down) || getWorld()->isObjThere<Boulder>(x+k,y-1))		// getWorld()->isDirtHere(x+k, y-1)	
+	 		{
+	 			//cout << "down: " << getWorld()->isInBounds(x+k, y-1) << endl;
+	 			return true;
+	 		}
+		}
+	}
+	return false;
+}
+
+
+void moveProtesterBy(int x, int y);
+void moveProtesterInDirBy(Direction dir, int amt);
+
+void Protester::moveProtesterBy(int x, int y)		// CORRECT?!?!?
+{
+	int j = getX();
+	int k = getY();
+
+	if (getWorld()->isInBounds(j+x, k+y) && getWorld()->nearestObjDist<Boulder>(j+x, k+y) > 3.0 && !getWorld()->isDirBlocked(getX(), getY(), getDirection()))	
+		moveTo(j+x, k+y);
+}
+
+void Protester::moveProtesterInDirBy(Direction dir, int amt)
+{
+	if (dir == left) moveProtesterBy(-amt, 0);
+	if (dir == right) moveProtesterBy(amt, 0);
+	if (dir == up) moveProtesterBy(0, amt);
+	if (dir == down) moveProtesterBy(0, -amt);
+}
+
+
+
+int Protester::getNumSquaresToMoveInCurrentDirection() const
+{
+	return m_numSquaresToMoveInCurrentDirection;
+}
+
+(From Protester)
+void setIsLeaving(bool v) { m_isLeaving = v; }

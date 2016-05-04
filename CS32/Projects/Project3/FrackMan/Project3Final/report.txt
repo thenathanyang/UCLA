@@ -1,0 +1,312 @@
+UCLA CS 32: Project 3 -- report.txt
+
+Nathan Yang
+ID: 404609327
+
+----------------------------------------
+
+1. HIGH LEVEL DESCRIPTIONS:
+
+===== Actor =====
+
+virtual void doSomething() = 0;
+	Actor's doSomething() is pure virtual because each of its derived classes will have its own implementation of doSomething().
+
+bool isAlive() const;
+	Returns whether or not the actor is alive. The function is const because it does not modify anything. 
+
+void setDead();
+	Sets the actor to not alive/dead.
+
+StudentWorld* getWorld() const;
+	Returns a pointer to the StudentWorld. The function is const because it does not modify anything. 
+
+int getHitPoints() const;
+	Returns the actor's hit points. The function is const because it does not modify anything. 
+
+virtual void annoyBy(int amt);
+	Decreases the actor's hit points by a specified amount, amt. THe function is virtual because one of its derived classes (Protester) has its own implementation of the function.
+
+bool makeObjNearFrackManVisible();
+	Sets objects that are not visible to visible within a radius of 4.
+
+int getNumTicks() const;
+	Returns a counter for the number of ticks passed. The function is const because it does not modify anything. 
+
+void incNumTicks();
+	Increases the number of ticks by 1.
+
+void setHitPoints(int amt);
+	Sets the actor's hit points to a specified amout, amt. This function allows other derived classes, such as Protester, to adjust their hit points to fit the project spefications.
+
+virtual bool isProtester() const;
+	Returns whether or not an actor is a Protester. The function is virtual because the Protester and HardcoreProtester classes will have a different implementation of the function, which returns true instead of false.
+
+
+===== FrackMan =====
+
+virtual void doSomething();
+	Checks to see if FrackMan can do something and which action it has been told to take by the user. The function is virtual because other classes will have different implementations of the same function. 
+
+int getSquirtsLeftInSquirtGun() const;
+	Returns the number of water squirts the FrackMan has. The function is const because it does not modify anything. 
+
+int getPlayerGoldCount() const;
+	Returns the number of gold nugget the FrackMan has. The function is const because it does not modify anything. 
+
+int getPlayerSonarChargeCount() const;
+	Returns the number of sonar charges the FrackMan has. The function is const because it does not modify anything. 
+
+void incGoldNuggets();
+	Increases the FrackMan's number of gold nuggets by 1. The function is called when FrackMan picks up a gold nugget.
+
+void pickedUpSonarKit();
+	Increases the FrackMan's number of sonar charges by 2. The function is called when FrackMan picks up a sonar kit.
+
+void pickedUpWater();
+	Increases the FrackMan's number of squirts of water by 5. The function is called when FrackMan picks up water from a water pool.
+
+void makeFrackManDie();
+	Sets FrackMan to dead.
+
+
+===== Dirt =====
+
+virtual void doSomething();
+	Does nothing because Dirt does nothing.
+
+
+===== Boulder =====
+
+virtual void doSomething();
+	Manages the Boulder's actions depending on which state the Boulder is in. In the stable state, the boulde rdoes nothing. In the waiting state, the boulder waits for 30 ticks before switching to the falling state. In the falling state, the boulder moves down one square until it hits dirt, a boulder, or the bottom of the field and annoys protesters and FrackMan that are in range while it moves down.
+
+bool isBoulderFalling() const;
+	Returns boolean value which indicates whether or not the boulder is in a falling state.
+
+
+===== Squirt =====
+
+virtual void doSomething();
+	Annoys all protesters within its range by 2 and manages how far the squirt travels. If a boulder, dirt, or boundary is in its path, it will set the squirt to dead, setting it to be removed.
+
+
+===== Barrel =====
+
+virtual void doSomething();
+	Makes itself visible if FrackMan is within range. If FrackMan is within range to pick up the barrel, it decreases the number of barrels in the world, plays the found oil sound, increases the score by 1000, and sets itself to dead in order to be removed from the oil field.
+
+
+===== GoldNugget =====
+
+virtual void doSomething();
+	Makes itself visible if FrackMan is within range. If the Gold Nugget is able to be picked up by FrackMan and FrackMan is within range to pick up the gold, it increases FrackMan's number of gold nuggets, plays the got goodie sound, increases the score by 10, and sets itself to dead in order to be removed from the oil field. If the Gold Nugget is able to be picked up by a protester and protester is within range to pick up the gold, the protester is bribed and the gold is set to dead. If a protester does not pick up the gold within its 100 tick lifetime, then the gold is set to dead in order to be removed from the field.
+
+
+===== SonarKit =====
+
+virtual void doSomething();
+	If FrackMan is within range to pick up the sonar kit, sonar charges are added to FrackMan's inventory, the got goodie sound is played, score is increased by 75, and the sonar kit is set to dead. If FrackMan does not pick up the sonar kit within its lifetime, then the sonar kit is set to dead in order to be removed from the field.
+
+
+===== WaterPool =====
+
+virtual void doSomething();
+	If FrackMan is within range to pick up the water from the water pool, squirts of water are added to FrackMan's inventory, the got goodie sound is played, score is increased by 100, and the water pool is set to dead. If FrackMan does not pick up the water within its lifetime, then the water pool is set to dead in order to be removed from the field.
+
+
+===== Protester =====
+
+virtual void doSomething();
+	Manages a protester's actions and how often is performs actions. The function is virtual because it manages the actions of both the Regular Protester and the Hardcore Protester. If the protester is stunned or resting, it does not do anything for a certain number of ticks. If the protester is leaving, then it will move one square closer to its exit point, which is at x = 60, y = 60. If the protester is a Hardcore Protester, then it will track the FrackMan from a certain range, even if FrackMan is not in its line of sight. If Protester is in range to yell at FrackMan, it will yell at FrackMan, decrease FrackMan's hit points, and wait a certain number of ticks before it can yell again. If the protester is in line of sight to FrackMan but not in range to yell, then the protester will walk toward FrackMan. If the protester is not in line of sight to FrackMan, then it moves around the oil field in areas that don't have dirt, changes directions, and turns at intersections.
+
+bool isFacingFrackman() const;
+	Depending on the protester's direction, the function returns whether or not the protester is facing FrackMan.
+
+bool isInLineOfSightToFrackMan() const;
+	Returns whether or not the protester is in line of sight to FrackMan.
+
+bool isLeaving() const;
+	Returns whether or not the protester is leaving.
+
+GraphObject::Direction dirToFaceFrackMan(int x, int y);
+	Returns the direction the protester needs to face in order to face FrackMan.
+
+virtual void annoyBy(int amt);
+	Decreases a protester's hit points by a specified amount, amt. If the protester has no more hit points, it is set into a leaving state, the most efficient path to the exit point is determined, and increases the score by the appropriate amount. Otherwise, the protester is stunned.
+
+virtual void bribe();
+	Bribes a Regular Protester so that it is set in a leaving state. A path to the exit point is generated, protester's found gold sound is played, and the socre is increased by 25. The function is virtual because the Hardcore Protester
+
+void stun();
+	Stuns a protester. Plays the protester's annoyed sound and sets the number of ticks it is to stayed stunned, in which it does nothing, to a certain number.
+
+bool isAtViableIntersection(int x, int y, Direction protDir) const;
+	Returns whether or not the protester is at a viable intersection where it can make a perpendicular turn. The function is const because it does not modify anything.
+
+int numOfViableIntersections(Direction protDir) const;
+	Returns the number of viable intersections where the protester can make a perpendicular turn. The function is const because it does not modify anything.
+
+GraphObject::Direction dirProtesterToTurn(Direction protDir) const;
+	Returns a direction in which protester can make a perpendicular turn. If the protester is at an intersection where there are two directions it could turn to, it randomly choses one of the two directions. Otherwise, it returns the one direction where there is only one viable turn. The function is const because it does not modify anything.
+
+void setTicksToBeStunned(int amt);
+	Sets the number of ticks the protester is to be stunned to a certain amount, amt.
+
+void playLeavingSound();
+	Plays the protester's leaving sound if the sound has not already been played.
+
+virtual bool isProtester() const;
+	Returns whether or not an actor is a Protester. In this case, the function will return true because the function is within the Protester class.
+
+
+===== HardcoreProtester =====
+
+void bribe() override;
+	Override the regular protester's bribe function. It plays the found gold sound, increases the score by 50, and sets the number of ticks to be stunned/resting to a certain amount. Unlike the Regular Protester's bribe function, it does not set the protester to a leaving state and does not generate a path to an exit point.
+
+
+===== StudentWorld =====
+
+virtual int init();
+	Initializes all the initial objects for the game. This includes the FrackMan, Dirt, and Boulders.
+
+virtual int move();
+	Manages all the game and actors' actions during each tick of the game.
+
+virtual void cleanUp();
+	Removes and deletes all the actors/objects in the game.
+
+template<typename T> bool isObjThere(int x, int y) const;
+	Returns whether or not an actor of a certain type is at the specified x and y.
+
+template<typename T> double nearestObjDist(int x, int y);
+	Returns the distance to the nearest actor of a certain type.
+
+template<typename T> void illuminateAroundFrackMan();
+	Sets all the non-visible actors to visible.
+
+template<typename T> void getAllTypeOf(int x, int y, double radius, vector<T*>& v);
+	Pushes all the actors of a certain type in the specified vicinity into a vector that is passed in through the function's parameters.
+
+template<typename T> T* getTypeOf(int x, int y, double radius);
+	Returns a pointer to an actor of a certain type in the specified vicinity.
+
+template<typename T> T* getNearestObj(int x, int y);
+	Returns a pointer to an actor of a certain type that is closest distance to position (x, y).
+
+FrackMan* getFrackMan() const;
+	Returns a pointer to the FrackMan actor.
+
+bool newPosValid(int& x, int& y, int moveBy, GraphObject::Direction);
+	Updates x and y by a certain amount in certain direction and returns whether or not that position is in bounds.
+
+bool isInBounds(int x, int y) const;
+	Returns whether or not the position (x, y) is within the boundaries of the game.
+
+bool isDirtHere(int x, int y) const;
+	Returns whether or not there is a dirt object at the position (x, y).
+
+bool removeDirt(int x, int y);
+	Removes a dirt object at the specified (x, y) position.
+
+void insertSquirt(Squirt* squirtObj);
+	Inserts a Squirt actor in the vector of actors.
+
+void decNumBarrels();
+	Decreases the number of barrels.
+
+void insertGoldNugget(GoldNugget* goldObj);
+	Inserts a Gold Nugget actor into the vector of actors.
+
+GraphObject::Direction getRandomDir() const;
+	Returns a randomly generated direction.
+
+void getBestPath(int initX, int initY, int destX, int destY, Path& finalPath);
+	Generates a path using a queue-based, breadth-first search algorithm and passes that path into a Path type in the function's parameter. 
+
+bool isDirtInDir(int x, int y, GraphObject::Direction dir) const;
+	Returns a boolean value that indicates whether or not there are a 4 Dirt squares in a certain direction. 
+
+bool isDirBlocked(int x, int y, GraphObject::Direction dir) const;
+	Returns a boolean value that indicates wether or not a move in a certain direction is in bounds, has no dirt, and has no boulder.
+
+bool isBoulderInPath(int x, int y) const;
+	Makes sure there is no boulder in the path generated by the pathfinding algorithm.
+
+----------------------------------------
+
+2. INCOMPLETE FUNCTIONALITIES/BUGS 
+
+I have attempted to implement all of the project's functionality. I currently do not know of any bugs in my classes; however, my game runs a bit slower compared to the provided demo.
+
+----------------------------------------
+
+3. OTHER DESIGN DECISIONS/ASSUMPTIONS
+
+I followed the project specifications, which was very clear, as closely as I could. If there was something about the requirements I was unsure about, I checked to see how the provided demo behaved and used that as a guide for implementations that I was confused about. I did not make any major design decisions and/or assumptions that the project specifications did not specify.
+
+----------------------------------------
+
+4. TESTS FOR EACH CLASS
+
+===== Actor =====
+
+Because I could not instantiate the Actor class, I could not directly test it. I, however, was able to test Actor's public functions through other classes.
+
+
+===== FrackMan =====
+
+I was able to test FrackMan by checking to see that all its functionality worked. I checked that it would successfully "dig" (remove) the dirt occupied by the FrackMan and played the digging sound. I also made sure that each of the appropriate keys a user pressed would do the appropriate action within the boundaries of the game and all actions done on the FrackMan were within the boundaries of the game as well. For example, I made sure that the FrackMan could change direction, move, squirt, drop gold, and use the sonar when the appropriate keys were pressed.
+
+
+===== Dirt =====
+
+I tested Dirt by making sure that it occupied the appropriate regions of the oil field and was able to removed when FrackMan was "digging" or when a boulder was initialized.
+
+
+===== Boulders ======
+
+I tested Boulder by making sure that it was initalized in a stable state in which there was no dirt in the area the boulder was occupying, there was dirt directly under the boulder (in the y coordinate direction), and did nothing. I then removed the dirt under the boulder to check if it successfully transitioned into a waiting state and waited 30 ticks before changing to a falling state. I checked the falling state by seeing if it played the falling rock sound, moved down one squre until it hit dirt, another boulder, or the bottom of the oil field, continued to move if it came into contact with protesters, and ended the level decrease FrackMan's lives by 1 if it came into contact with FrackMan. 
+
+
+===== Squirt =====
+
+I tested Squirt by verifying that it appropriately "annoyed" protesters, correctly moved, and traveled the appropriate distance. I checked that Squirt was "annoying" protesters by 2 by printing out a protester's health each tick and checking to see that its health was decreased. While moving, I checked to see that it only traveled 4 squares in the direction FrackMan was facing and set to dead after. I also made sure that the Squirt would set to dead if there was a dirt or boulder in its path before it could finish traveling 4 squares. I tested this by squirting into dirt and a boulder.
+
+
+===== Barrel of Oil =====
+
+I tested Barrel by checking that it was initiated as not visible and had the correct properties. I printed out the locations of the barrels and had FrackMan walk up to a one and see if the barrel would become visible. I then walked into the barrel to pick it up to see if the barrel would be set to dead and removed, played the found oil sound, and increase the score by 1000. 
+
+
+===== Gold Nugget =====
+
+I tested the Gold Nugget by checking that it was initiated as not visible and had the correct properties. I printed out the locations of the gold nuggets and had FrackMan walk up to a one and see if the gold would become visible. I then walked into to it to pick it up in order to check that the gold was set to dead and removed, played the got goodie sound, increased the score by 10, and increased FrackMan's gold count by 1. I then checked gold's other state which is pickup-able by protesters, but not FrackMan, by dropping a gold and having a protester pick it up. When a protester walked into a gold to pick it up, it checked to see if the dropped gold was set to dead and removed, played protester's found gold sound, bribed the protester, and increased the score by 25. I also checked that the gold would disappear after its lifetime expired by dropping it in an isolated part of the oil field and waiting for the gold to disappar after the appropriate number of ticks.
+
+
+===== Sonar Kit =====
+
+I tested Sonar Kit by checking that it appeared on the oil field correctly and had the correct properties. When a sonar kit appeared on the oil field, I had FrackMan walk into it to pick it up to check that the sonar kit would be set to dead and removed from the field, played the got goodie sound, added two sonars to FrackMan's sonar count, and increased the score by 75. I checked that the sonar kit would disappear when its lifetime expired by not picking up the sonar kit and waiting for it to disappear after the appropriate number of ticks.
+
+
+===== Water Pool =====
+
+I tested the Water Pool to see it had the correct properties when it appeared on the oil field and was picked up. I had FrackMan walk into the water pool to pick it up to check that the water pool would be set to dead and removed, played the got goodie sound, added 5 new squirts of water to FrackMan's water count, and incrased the score by 100. I also checked that the water pool would disappear when its lifetime expired by not picking up the water pool and waiting for it to disappear after the appropriate number of ticks.
+
+
+===== Regular Protesters =====
+
+I tested Protesters by checking to see that it fulfilled all of its properties. When the protester appeared on the field, I observed its actions to check that it would perform an action (execute its doSomething()) after a certain number of ticks, randomly choose a direction after a certain number of ticks and move around when FrackMan was not in its line of sight, and follow FrackMan if FrackMan enters its line of sight. I tested to see that the protester would correctly annoy FrackMan by having FrackMan walk up to a protester, letting the protester yell at FrackMan, and watching FrackMan's health decrease by 2 health points (20%). I also made sure that the protester could be stunned by squirting the protester. I also made sure that the protester would leave the field and play the give up sound by squirting the protester until its hit points ran out or by having a boulder drop on the protester. I made sure that each way of making the protester leave the field would increase the score by the appropriate amount. I also checked to see if the protester performs the correct actions when it picks up a gold nugget by having FrackMan drop a gold in a protester's path. I checked to see if the action caused protester's found gold sound, increased the score by 25, and successfully bribed the protester, causing it to be in a leaving state.
+
+
+===== Hardcore Protesters =====
+
+I tested Hardcore Protesters by checking to see that it fulfilled all of its properties. When the protester appeared on the field, I observed its actions to check that it would perform an action after a certain number of ticks, randomly choose a direction after a certain number of ticks and move around when FrackMan was not in its line of sight, and follow FrackMan if FrackMan enters its line of sight or if it is in range to "track" FrackMan's cell phone. I tested to see that the hardcore protester would correctly annoy FrackMan by having FrackMan walk up to a hardcore protester, letting it yell at FrackMan, and watching FrackMan's health decrease by 2 health points (20%). I also made sure that the hardcore protester could be stunned by squirting the protester. I also made sure that the hardcore protester would leave the field and play the give up sound by squirting the hardcore protester until its hit points ran out or by having a boulder drop on the it. I made sure that each way of making the hardcore protester leave the field would increase the score by the appropriate amount. I also checked to see if the hardcore protester performs the correct actions when it picks up a gold nugget by having FrackMan drop a gold in a protester's path. I checked to see if the action caused protester's found gold sound, increased the score by 50, and successfully bribed the protester, causing it to be in a brief paused state.
+
+
+===== StudentWorld =====
+
+I tested StudentWorld by seeing if it correctly initialized and managed the game world. I did this by playing the game multiple times to see if its member functions were correctly used throughout the game. I tested that the pathfinding algorithm worked correctly by printing out all the points it would visit and seeing that the points formed a valid path.
+
+

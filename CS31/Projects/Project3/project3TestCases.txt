@@ -1,0 +1,36 @@
+if (isRouteWellFormed("n2e1"))
+	cout << "Passed test 1: isRouteWellFormed(\"n2e1\")" << endl;
+if (!isRouteWellFormed("e1x"))
+	cout << "Passed test 2: !isRouteWellFormed(\"e1x\")" << endl;
+if (navigateSegment(3, 1, 'N', 2) == 2)
+	cout << "Passed test 3: navigateSegment(3, 1, 'N', 2)" << endl;
+int len;
+len = -999;  // so we can detect whether navigateRoute sets len
+if (navigateRoute(3,1, 3,4, "2N1e01E0n2s1e", len) == 0  &&  len == 7)
+	cout << "Passed test 4: navigateRoute(3,1, 3,4, \"N2eE01n0s2e1", len)" << endl;
+len = -999;  // so we can detect whether navigateRoute sets len
+if (navigateRoute(3,1, 3,4, "e1x", len) == 2  &&  len == -999)
+	cout << "Passed test 5: navigateRoute(3,1, 3,4, \"e1x\", len)" << endl;
+
+
+
+
+
+
+
+setSize(3,4);
+setWall(1,4);
+setWall(2,2);
+setWall(3,2);
+assert(isRouteWellFormed("n2e1"));
+assert(!isRouteWellFormed("e1x"));
+assert(navigateSegment(3, 1, 'N', 2) == 2);
+int len;
+len = -999;  // so we can detect whether navigateRoute sets len
+assert(navigateRoute(3,1, 3,4, "N2eE01n0s2e1", len) == 0  &&  len == 7);
+len = -999;  // so we can detect whether navigateRoute sets len
+assert(navigateRoute(3,1, 3,4, "e1x", len) == 2  &&  len == -999);
+len = -999;  // so we can detect whether navigateRoute sets len
+assert(navigateRoute(2,4, 1,1, "w3n1", len) == 3  &&  len == 1);
+//…
+cout << "All tests succeeded" << endl;

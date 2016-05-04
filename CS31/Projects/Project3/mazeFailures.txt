@@ -1,0 +1,415 @@
+/*
+int main()
+{
+	int n; 	
+	setSize(3,4);      // make a 3 by 4 grid
+	setWall(1,4);      // put a wall at (1,4)
+    setWall(2,2);      // put a wall at (2,2)
+    if (!isWall(3,2))  // if there's no wall at (3,2)  [there isn't]
+        setWall(3,2);  //    put a wall at (3,2)
+    draw(3,1, 3,4);    // draw the grid, showing an S at (3,1)
+                       //    start position, and an E at (3,4)
+   
+    cerr << endl;
+    cerr << endl;
+	
+	cerr << (isRouteWellFormed("w2e1s") ? "true" : "false") << endl;		//e1x, w2+n3
+}
+*/
+
+
+
+
+
+
+int navigateRoute(int sr, int sc, int er, int ec, string route, int& nsteps)
+{
+	nsteps = 0;
+
+	if (isWall(sr,sc) || isWall(er,ec) || !isLocationValid(sr,sc) || !isLocationValid(er,ec) || !isRouteWellFormed(route))		// Checks to see if route valid and starting position & ending position are valid. If not, return 2.
+	{
+		return 2;
+	}	
+	else
+	{
+		int pos = 0;
+		int size = route.size();
+		int totalStepsTaken = 0;
+		int stepsTaken = 0;
+		char dir;
+		string maxStepsStr = "";
+		int maxSteps;
+		int& newRow = sr;
+		int& newCol = sc;
+
+		while(pos < size)
+		{
+			while(true)
+			{
+				dir = tolower(route[pos]);		// Takes first dir charcter of a segment
+
+				int digits = 0;
+				pos++;
+
+
+				while(digits < 2)		// Takes next 2 digits
+				{
+					if(isDirectionValid(route[pos]))
+					{
+						maxStepsStr += "1";
+						break;
+					}
+
+					if(isdigit(route[pos]))	
+					{	
+						maxStepsStr += route[pos];
+						digits++;
+					}
+
+					pos++;
+				}
+
+
+				stringstream(maxStepsStr) >> maxSteps;
+
+
+				if (tolower(dir) == 'n')		/// Checks to see if running into wall or off the edge. If it does, return 3.
+				{
+					while(stepsTaken < maxSteps)
+					{
+						if(isWall(r-1, c) || !isLocationValid(r-1, c))
+						{
+							nsteps = totalStepsTaken + stepsTaken;
+							return 3;
+						}
+						else
+						{
+							stepsTaken++;
+						}
+					}
+				}	
+				else if (tolower(dir) == 's')
+				{
+					while(stepsTaken < maxSteps)
+					{
+						if(isWall(r+1, c) || !isLocationValid(r+1, c))
+						{
+							nsteps = totalStepsTaken + stepsTaken;
+							return 3;
+						}
+						else
+						{
+							stepsTaken++;
+						}
+					}
+				}
+				else if (tolower(dir) == 'e')
+				{
+					while(stepsTaken < maxSteps)
+					{
+						if(!isWall(r, c+1) || isLocationValid(r, c+1))
+						{
+							nsteps = totalStepsTaken + stepsTaken;
+							return 3;
+						}
+						else
+						{
+							stepsTaken++;
+						}
+					}
+				}
+				else if (tolower(dir) == 'w')
+				{
+					while(stepsTaken < maxSteps)
+					{
+						if(!isWall(r, c-1) || isLocationValid(r, c-1))
+						{
+							nsteps = totalStepsTaken + stepsTaken;
+							return 3;
+						}
+						else
+						{
+							stepsTaken++;
+						}
+					}
+				}
+
+
+
+				totalStepsTaken += navigateSegment(newRow, newCol, dir, maxSteps);		// Adds # of steps taken in each segment to totalStepsTaken
+
+				if(dir == 'n')															// Tells where the new coordinates are after segment navigated
+					newRow -= navigateSegment(newRow, newCol, dir, maxSteps);
+				else if (dir == 's')
+					newRow += navigateSegment(newRow, newCol, dir, maxSteps);
+				else if (dir == 'e')
+					newCol += navigateSegment(newRow, newCol, dir, maxSteps);
+				else if (dir = 'w')
+					newCol -= navigateSegment(newRow, newCol, dir, maxSteps);
+
+				break;
+			}
+
+		}
+
+		nsteps += totalStepsTaken
+
+		if (newRow == er && newCol == ec)			// Successfully navigated to end coordinates --> return 0
+			return 0;
+		else										// Route successfully navigated but did not end at end coordinates --> return 1
+			return 1;
+	}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int navigateRoute(int sr, int sc, int er, int ec, string route, int& nsteps)
+{
+	nSteps = 0;
+
+	if (isWall(sr,sc) || isWall(er,ec) || !isLocationValid(sr,sc) || !isLocationValid(er,ec) || !isRouteWellFormed(route))	
+	{
+		return 2;
+	}	
+	else
+	{
+		int pos = 0;
+		int totalStepsTaken = 0;
+		char dir;
+		string maxStepsStr = "";
+		int maxSteps;
+
+		while(pos < size)
+		{
+			int segmentSize = 0;
+
+			while(segmentSize < 3)
+			{
+				dir = tolower(route[pos]);
+
+				int digits = 0;
+				pos++;
+				segmentSize++;
+
+				while(digits < 2)
+				{
+					if(isDirectionValid(route[pos]))
+						break;
+
+					if(isdigit(route[pos]))			// <=== check if one move is a wall or not
+						maxStepsStr += route[pos];
+						digits++;
+						segmentSize++;
+
+					pos++;
+				}
+
+			stringstream(maxStepsStr) >> maxSteps;
+
+			if(dir == 'n')
+				sr -= maxSteps;
+			//etc..
+
+			totalStepsTaken += navigateSegment()
+
+			}
+
+		}
+
+		return 0;
+	}
+
+
+}
+
+
+
+
+
+
+
+
+
+if (tolower(dir) == 'n')
+	{
+		while(stepsTaken < maxSteps)
+		{
+			if(isLocationValid(r-1, c) && !isWall(r-1, c))
+			{
+				r--;
+				stepsTaken++;
+			}
+			else
+			{
+				return stepsTaken;
+			}
+		}
+		return stepsTaken;
+	}
+	else if (tolower(dir) == 's')
+	{
+		while(stepsTaken < maxSteps)
+		{
+			if(isLocationValid(r+1, c) && !isWall(r+1, c))
+			{
+				r++;
+				stepsTaken++;
+			}
+			else
+			{
+				return stepsTaken;
+			}
+		}
+		return stepsTaken;
+	}
+	else if (tolower(dir) == 'e')
+	{
+		while(stepsTaken < maxSteps)
+		{
+			if(!isWall(r, c+1) && isLocationValid(r, c+1))
+			{
+				c++;
+				stepsTaken++;
+			}
+			else
+			{
+				return stepsTaken;
+			}
+		}
+		return stepsTaken;
+	}
+	else if (tolower(dir) == 'w')
+	{
+		while(stepsTaken < maxSteps)
+		{
+			if(!isWall(r, c-1) && isLocationValid(r, c-1))
+			{
+				c--;
+				stepsTaken++;
+			}
+			else
+			{
+				return stepsTaken;
+			}
+		}
+		return stepsTaken;
+	}
+
+
+
+
+
+
+
+
+
+/*
+				if (tolower(dir) == 'n')		/// Checks to see if running into wall or off the edge. If it does, return 3.
+				{
+					while(stepsTaken < maxSteps)
+					{
+						newRow--;
+						if(!isLocationValid(newRow, newCol) || isWall(newRow, newCol))	//<===== REVERSE THE FUCKING POSITIONS!!! OR JUST FUCKING REDO IT!!!!!!
+						{
+							nsteps = totalStepsTaken + stepsTaken;
+							cerr << "n not working" << endl;
+							return 3;
+						}
+						stepsTaken++;
+						cerr << "stepsTaken: " << stepsTaken << endl;
+						cerr << "Location: " << newRow << ", " << newCol << endl;
+					}
+				}	
+				else if (tolower(dir) == 's')
+				{
+					while(stepsTaken < maxSteps)
+					{
+						newRow++;
+						if(!isLocationValid(newRow, newCol) || isWall(newRow, newCol))
+						{
+							nsteps = totalStepsTaken + stepsTaken;
+							cerr << "s not working" << endl;
+							return 3;
+						}
+						stepsTaken++;
+						cerr << "stepsTaken: " << stepsTaken << endl;
+						cerr << "Location: " << newRow << ", " << newCol << endl;
+					}
+				}
+				else if (tolower(dir) == 'e')
+				{
+					while(stepsTaken < maxSteps)
+					{
+						newCol++;
+						if(!isLocationValid(newRow, newCol) || isWall(newRow, newCol))
+						{
+							nsteps = totalStepsTaken + stepsTaken;
+							cerr << "e not working" << endl;
+							return 3;
+						}
+						stepsTaken++;
+						cerr << "stepsTaken: " << stepsTaken << endl;
+						cerr << "Location: " << newRow << ", " << newCol << endl;
+					}
+				}
+				else if (tolower(dir) == 'w')
+				{
+					while(stepsTaken < maxSteps)
+					{
+						newCol--;
+						if(!isLocationValid(newRow, newCol) || isWall(newRow, newCol))
+						{
+							nsteps = totalStepsTaken + stepsTaken;
+							cerr << "w not working" << endl;
+							return 3;
+						}
+						stepsTaken++;
+						cerr << "stepsTaken: " << stepsTaken << endl;
+						cerr << "Location: " << newRow << ", " << newCol << endl;
+					}
+				}
+				*/
+
+
+
+
+
+
+				while(stepsTaken < maxSteps)			// 
+		{
+			if (tolower(dir) == 'n') newRow--;
+			if (tolower(dir) == 's') newRow++;
+			if (tolower(dir) == 'e') newCol++;
+			if (tolower(dir) == 'w') newCol--;
+			if(!isLocationValid(newRow, newCol) || isWall(newRow, newCol))		// If robot runs into a wall or off the grid --> return 3
+			{
+				nsteps = totalStepsTaken + stepsTaken;
+				return 3;
+			}
+			stepsTaken++;
+		}
+
+
+
+
+//return !(newRow == er && newCol == ec); // return 0 if equal, 1 if not equal

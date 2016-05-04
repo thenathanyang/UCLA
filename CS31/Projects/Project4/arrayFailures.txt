@@ -1,0 +1,251 @@
+int split(string a[], int n, string splitter)		// WORKS!!!!
+{
+	//const int arraySize = n;
+	for(int x = 0; x < n; x++) {
+		cerr << "Original Array in Split: Element in " << x << ": " << a[x] << endl;
+	
+	}
+	cerr << endl;
+
+
+
+	string newArray[10000];
+	int x = 0;
+	int posNotLessThanSplitter;
+	for(int k = 0; k < n; k++)
+	{	
+		if(a[k] < splitter)
+		{
+			newArray[x] = a[k];
+			x++;
+		}
+		// if(a[k] == splitter)
+		// {
+		// 	newArray[x] = a[k];
+		// 	x++;
+		// }
+		// else if(a[k] > splitter)
+		// {
+		// 	newArray[x] = a[k];
+		// 	x++;
+		// }
+
+	}
+	//cerr << "x counter: " << x << endl;
+
+	for(int j = 0; j < n; j++)
+	{
+		if(a[j] == splitter)
+		{
+			newArray[x] = a[j];
+			x++;
+		}
+	}
+
+	for(int i = 0; i < n; i++)
+	{
+		if(a[i] > splitter)
+		{
+			newArray[x] = a[i];
+			x++;
+		}
+	}
+
+
+	for(int x = 0; x < n; x++)
+		cerr << "Final Array in Split: Element in " << x << ": " << newArray[x] << endl;
+	cerr << endl;
+
+	for(int h = 0; h < n; h++)
+	{
+		if(newArray[h] >= splitter)
+			return h;
+	}
+	
+	return n;
+}
+
+
+
+
+
+
+
+
+
+
+int split(string a[], int n, string splitter)
+{
+	for(int x = 0; x < n; x++)
+		cerr << "Original Array in Split: Element in " << x << ": " << a[x] << endl;
+	cerr << endl;
+
+	for(int k = 0; k < n; k++)
+	{
+		cerr << "a[k]: " << a[k] << endl;
+		cerr << endl;
+		for(int i = 0; i < n; i++)
+		{
+			cerr << "a[i]: " << a[i] << endl;
+			cerr << endl;
+
+			//string copy = a[i];
+			if(a[k] > a[i])
+			{
+				string copy = a[i];
+				//a[k] = a[i];
+				//a[i] = copy;
+				for(int x = 1; x < n; x++)
+				{
+					a[n - x] = a[n - x - 1];
+				}
+				a[k] = copy;
+
+
+				for(int x = 0; x < n; x++)
+					cerr << "New Array in Split: Element in " << x << ": " << a[x] << endl;
+				cerr << endl;
+			}
+	
+		}
+		
+	}
+
+	for(int x = 0; x < n; x++)
+		cerr << "Final Array in Split: Element in " << x << ": " << a[x] << endl;
+	cerr << endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int split(string a[], int n, string splitter)
+{
+	if(n < 0)
+		return -1;
+
+	for(int x = 0; x < n; x++)
+		cerr << "Original Array in Split: Element in " << x << ": " << a[x] << endl;
+		cerr << endl;
+
+	cerr << "Splitter: " << splitter << endl;
+	cerr << endl;
+	
+	for(int k = 0; k < n; k++)
+	{
+		cerr << "a[k]: " << a[k] << endl;
+		cerr << endl;
+		if(a[k] >= splitter)
+		{	int i = 0;
+			//for(int i = 0; i < n; i++)
+			while(i < n)
+			{
+				cerr << "a[n - 1 - i]: " << a[n - 1 - i] << endl;
+				cerr << endl;	
+				int isExecuted = 0;
+				if(a[n - 1 - i] <= splitter)
+				{
+					string copy = a[n - 1 - i];
+					a[n - 1 - i] = a[k];
+					a[k] = copy;
+					isExecuted = 1;
+
+					for(int x = 0; x < n; x++)
+						cerr << "New Array in Split: Element in " << x << ": " << a[x] << endl;
+					cerr << endl;
+
+			//		break;
+				}
+				if(isExecuted == 1)
+					break;
+				i++;
+			}
+		}
+	}
+
+	for(int x = 0; x < n; x++)
+		cerr << "Final Array in Split: Element in " << x << ": " << a[x] << endl;
+	cerr << endl;
+
+	int posNotLessThanSplitter;
+	for(int j = 0; j < n; j++)
+		if(!(a[j] < splitter))
+			posNotLessThanSplitter = j;
+
+	return posNotLessThanSplitter;
+}
+
+
+
+
+
+
+
+
+int split(string a[], int n, string splitter)			// WORKS
+{
+	for(int x = 0; x < n; x++) {
+		cerr << "Original Array in Split: Element in " << x << ": " << a[x] << endl;
+	
+	}
+	cerr << endl;
+
+	if(n < 0)
+		return -1;
+
+	string newArray[10000];
+	int x = 0;
+	int posNotLessThanSplitter;
+	for(int k = 0; k < n; k++)
+	{	
+		if(a[k] < splitter)
+		{
+			newArray[x] = a[k];
+			x++;
+		}
+	}
+
+	for(int j = 0; j < n; j++)
+	{
+		if(a[j] == splitter)
+		{
+			newArray[x] = a[j];
+			x++;
+		}
+	}
+
+	for(int i = 0; i < n; i++)
+	{
+		if(a[i] > splitter)
+		{
+			newArray[x] = a[i];
+			x++;
+		}
+	}
+
+
+	for(int x = 0; x < n; x++)
+		cerr << "Final Array in Split: Element in " << x << ": " << newArray[x] << endl;
+	cerr << endl;
+
+	for(int h = 0; h < n; h++)
+	{
+		if(newArray[h] >= splitter)
+			return h;
+	}
+	
+	return n;
+}

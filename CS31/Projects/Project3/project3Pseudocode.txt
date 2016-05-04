@@ -1,0 +1,59 @@
+Segment checking:
+
+N e3 w34
+
+if first item is a letter									w
+	check if next item is letter or number
+		if next item is letter, segment is good
+		else if next item is a number, check if item after that is number or letter		3
+			if that next item is letter, segement is good
+			else if that next item is a number, check if item after that is number or letter		4
+				if that next item is is a letter, segement good (new segement)
+				else if that next item is a number, segment is NOT good
+S6e3W56n123
+
+size = number of chars
+start at first index (pos = 0)
+while (pos < size)
+	if character as pos is not valid direction
+		return 0
+	digits = 0
+	pos ++
+	while (pos < size)
+		if not digit or valid dir
+			return 0
+		if char is valid direction character, this is a valid route segment 
+			break;	//check 
+		if char is digit, digits++
+		if digits > 2, return 0
+		pos++;
+
+return yes
+
+n12e3s
+
+
+
+First character then stop at next 2 digits.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

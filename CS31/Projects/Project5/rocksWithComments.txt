@@ -1,0 +1,365 @@
+#define _CRT_SECURE_NO_DEPRECATE
+
+#include <iostream>
+#include <cstring>
+#include <cctype>
+#include "utilities.h"
+using namespace std;
+
+// computer picks secret word of 4 to 6 letters
+// rock: letter in word and same position
+// pebble: letter in word but not in same position
+// score: number of probe words needed to get secret word
+	// includes the one that gets the secret one
+
+int manageOneRound(const char words[][7], int nWords, int wordnum);
+int isNotLower(const char probeWord[200]);
+int isWordValid(const char words[][7], char secretWord[7], int nWords);
+
+int main()
+{
+	char wordList[10000][7];
+	int nWords = loadWords(wordList, 10000);	// <---- CORRECT?!?!?!
+	int numRounds = 0;
+	int score = 0;
+	double totalScore = 0;
+	double average = 0;
+	int minScore = 0;
+	int maxScore = 0;
+
+	if (nWords < 1)
+	{
+		cout << "No words were loaded, so I can't play the game." << endl;
+		return 1;
+	}
+
+	cout << "How many rounds do you want to play? ";
+	cin >> numRounds;
+	cin.ignore(10000, '\n');
+	cout << endl;
+
+	if (numRounds < 0)
+	{
+		cout << "The number of rounds must be positive.";
+		return 1;
+	}
+
+	for (int currentRound = 1; currentRound <= numRounds; currentRound++)
+	{
+		//int wordnum = randInt(0, nWords - 1);	// <---- CORRECT?!?!?!
+		int wordnum = 1976;
+		int len = strlen(wordList[wordnum]);	// <---- CORRECT?!?!?!
+
+		cerr << "Secret word: " << wordList[wordnum] << endl;		// FOR TESTING!!!
+		cerr << endl;
+
+		cout << "Round " << currentRound << endl;
+		cout << "The secret word is " << len << " letters long." << endl;
+		score = manageOneRound(wordList, nWords, wordnum);
+		cout << "You got it in " << score << " tries." << endl;
+
+
+		totalScore += score;
+		average = totalScore / currentRound;
+
+		if (currentRound == 1)
+		{
+			minScore = score;
+			maxScore = score;
+		}
+		if (score < minScore)
+			minScore = score;
+		if (score > maxScore)
+			maxScore = score;
+
+		cout.setf(ios::fixed);
+	    cout.precision(2);
+
+		cout << "Average: " << average << ", minimum: " << minScore << ", maximum: " << maxScore << endl;
+		cout << endl;
+	}
+	return 0;
+}
+
+int manageOneRound(const char words[][7], int nWords, int wordnum)
+{
+	if (nWords < 0 || wordnum < 0 || wordnum >= nWords)
+		return -1;
+
+	char probeWord[200];	// correct?
+	char secretWord[7];			// FOR TESTING!!! NEED TO FIX!!!!!!
+	strcpy(secretWord, words[wordnum]);
+	//strcpy(secretWord, words[wordnum]);
+	int roundComplete = 0;
+	int score = 0;
+
+	while(!roundComplete)
+	{
+		int rocks = 0;
+		int pebbles = 0;
+
+		cout << "Probe Word: ";
+		cin.getline(probeWord, 200);
+
+		if (strlen(probeWord) < 4 || strlen(probeWord) > 6 || isNotLower(probeWord))
+		{
+			cout << "Your probe word must be a word of 4 to 6 lower case letters." << endl;
+			continue;
+		}
+
+		// int q = isWordValid(words, probeWord, nWords);
+		// cerr << "isWordValid: " << q << endl;		// FOR TESTING!!!
+		// if (q == 0)
+		// {
+		// 	cout << "I don't know that word." << endl;
+		// 	continue;
+		// }
+
+		score++;
+
+		if (!strcmp(secretWord, probeWord))	// CORRECT?!?!?!
+		{
+			roundComplete = 1;
+			break;					// Break out of whole while loop?
+		}
+
+		/*
+		for (int k = 0; probeWord[k] != '\0'; k++)
+		{
+			if (probeWord[k] == secretWord[k])
+				rock++;	
+		}
+		*/
+
+		// char leftoverProbes[200];
+		// char leftoverSecrets[200];
+		// char shorterWord[200];
+		// char longerWord[200];
+		// int length=0;
+
+
+		// if (strlen(probeWord)>=strlen(secretWord))
+		// {
+		// 	strcpy(shorterWord, secretWord);
+		// 	strcpy(longerWord, probeWord);
+		// }
+
+		// if (strlen(probeWord)<strlen(secretWord))
+		// {
+		// 	strcpy(shorterWord, probeWord);
+		// 	strcpy(longerWord, secretWord);
+		// }
+
+		// for (int k = 0; shorterWord[k] != '\0'; k++)
+		// {
+		// 	if (probeWord[k] == secretWord[k])
+		// 	{
+		// 		rocks++;
+		// 	}
+		// 	if (probeWord[k] != secretWord[k])			// HOW TO APPEND LAST LETTER IN LONGER ARRAY TO LEFTOVERS?
+		// 	{
+		// 		strcat(leftoverProbes, probeWord[k]);
+		// 		strcat(leftoverSecrets, secretWord[k]);
+		// 	}
+		// 	length++;
+		// }
+
+		// for (int j=length; longerWord[j] != '\0'; j++)
+		// {
+		// 	if (strlen(probeWord)>=strlen(secretWord))
+		// 	{
+		// 		strcat(leftoverProbes, probeWord[j]);
+		// 	}
+		// 	if (strlen(probeWord)<strlen(secretWord))
+		// 	{
+		// 		strcat(leftoverSecrets, secretWord[j]);
+		// 	}
+		// }
+
+
+
+
+		// char longerLeftoverArray[200];
+		// char shorterLeftoverArray[200];
+
+
+		// if (strlen(leftoverProbes)>=strlen(leftoverSecrets))
+		// {
+		// 	strcpy(shorterLeftoverArray, leftoverSecrets);
+		// 	strcpy(longerLeftoverArray, leftoverProbes);
+		// }
+
+		// if (strlen(leftoverProbes)<strlen(leftoverSecrets))
+		// {
+		// 	strcpy(shorterLeftoverArray, leftoverProbes);
+		// 	strcpy(longerLeftoverArray, leftoverSecrets);
+		// }
+
+
+
+
+
+		// for (int i = 0; longerLeftoverArray[i] != '\0'; i++)
+		// {
+		// 	for (int b = 0; shorterLeftoverArray[b] != '\0'; b++)
+		// 	{
+		// 		if (leftoverProbes[i] == leftoverSecrets[b])
+		// 		{
+		// 			pebbles++;
+		// 			break;
+		// 		}
+		// 	}
+		// }
+
+		int probeLen = strlen(probeWord);
+		int secretLen = strlen(secretWord);
+		char probeWordCopy[200];
+		char secretWordCopy[200];
+		strcpy(probeWordCopy, probeWord);
+		strcpy(secretWordCopy, secretWord);
+
+		// for (int p = 0; p < min(probeLen, secretLen); p++) {				// ORIGNINAL!!!!
+		// 	if (probeWord[p] == secretWord[p]) {
+		// 		rocks++;
+		// 		secretWord[p] = 0;
+		// 		probeWord[p] = 0;
+		// 	}
+		// }
+
+
+		for (int p = 0; p < min(probeLen, secretLen); p++) {
+			if (probeWordCopy[p] == secretWordCopy[p]) {
+				rocks++;
+				secretWordCopy[p] = 0;
+				probeWordCopy[p] = 0;
+			}
+		}
+
+
+
+		// FOR TESTING!!!!!!!!!
+
+		// for (int i = 0; i < secretLen; i++) {
+		// 	if (secretWord[i] == 0) {
+		// 		cout << "0";
+		// 	} else{
+		// 		cout << secretWord[i];
+		// 	}
+
+		// 	// cout << ((secretWord[i] != '\0') ? secretWord[i] : "0") << endl;
+		// }
+		// cout<<endl;
+
+		// for (int i = 0; i < probeLen; i++) {
+		// 	if (probeWord[i] == 0) {
+		// 		cout << "0";
+		// 	} else{
+		// 		cout << probeWord[i];
+		// 	}
+
+		// 	// cout << ((secretWord[i] != '\0') ? secretWord[i] : "0") << endl;
+		// }
+		// cout<<endl;
+
+
+
+
+
+		for (int k = 0; k < probeLen; k++)
+		{
+			for (int i = 0; i < secretLen; i++)
+				if (!(probeWordCopy[k] == 0 || secretWordCopy[i] == 0) && probeWordCopy[k] == secretWordCopy[i])
+				{
+					// cout << probeWord[k] <<","<<secretWord[i]<<endl;
+					// cout << "i: " << i << endl;
+					// cout << "k: " <<k <<endl;
+					pebbles++;
+					secretWordCopy[i] = 0;
+					probeWordCopy[k] = 0;
+					break;
+				}
+		}
+
+
+
+
+		for (int i = 0; i < secretLen; i++) {
+			if (secretWord[i] == 0) {
+				cout << "0";
+			} else{
+				cout << secretWord[i];
+			}
+
+			// cout << ((secretWord[i] != '\0') ? secretWord[i] : "0") << endl;
+		}
+		cout<<endl;
+
+		for (int i = 0; i < probeLen; i++) {
+			if (probeWord[i] == 0) {
+				cout << "0";
+			} else{
+				cout << probeWord[i];
+			}
+
+			// cout << ((secretWord[i] != '\0') ? secretWord[i] : "0") << endl;
+		}
+		cout<<endl;
+
+
+		// for (int k = 0; k < probeLen; k++)		// CORRECT?!?!?!		// NEED TO FIX!!!
+		// {
+		// 	for (int i = 0; i < secretLen; i++) // detest   datest
+		// 	{
+		// 		cout << "try " << k <<", "<<i << " " << probeWord[k] <<", "<<secretWord[i] <<endl;
+ 	// 			if (probeWord[k] == secretWord[i])
+		// 		{
+					
+		// 			if (k == i) {
+		// 				cout << k << " " << i << " " << probeWord[k] << endl;
+		// 				rocks++;
+		// 			}
+		// 			//else
+		// 			//	pebbles++;
+		// 			secretWord[i] = '\0';
+		// 			break;
+		// 		}
+		// 	}
+		// }
+
+		cout << "Rocks: " << rocks << ", Pebbles: " << pebbles << endl;
+
+	}
+
+	return score;
+}
+
+
+
+
+int isNotLower(const char probeWord[200])		// Should put const?
+{
+	int notLower = 0;
+
+	for (int x = 0; probeWord[x] != '\0'; x++)
+	{
+		if (!islower(probeWord[x]))
+		{
+			notLower = 1;
+		}
+	}
+	return notLower;
+}
+
+int isWordValid(const char words[][7], char probeWord[200], int nWords)		// Should put const?
+{
+		for (int y = 0; y < nWords; y++)
+		{
+			if (strcmp(probeWord, words[y]) == 0)
+			{
+				return 1;
+			}
+		}
+		return 0;
+}
+
+

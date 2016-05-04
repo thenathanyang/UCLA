@@ -1,0 +1,44 @@
+    // switch (dir)
+    // {
+    // case UP:
+    //     if (m_arena->nRobotsAt(m_row-1, m_col) > 0)
+    //         m_arena->attackRobotAt(m_row-1, m_col, dir);
+    //     m_arena->determineNewPosition(m_row, m_col, dir);
+    //     break;
+    // case DOWN:   
+    //     if (m_arena->nRobotsAt(m_row+1, m_col) > 0)
+    //         m_arena->attackRobotAt(m_row+1, m_col, dir);
+    //     m_arena->determineNewPosition(m_row, m_col, dir);
+    //     break;
+    // case LEFT:   
+    //     if (m_arena->nRobotsAt(m_row, m_col-1) > 0)
+    //         m_arena->attackRobotAt(m_row, m_col-1, dir);
+    //     m_arena->determineNewPosition(m_row, m_col, dir);
+    //     break;
+    // case RIGHT:   
+    //     if (m_arena->nRobotsAt(m_row, m_col+1) > 0)
+    //         m_arena->attackRobotAt(m_row, m_col+1, dir);
+    //     m_arena->determineNewPosition(m_row, m_col, dir);
+    //     break;
+    // }
+
+
+    /*
+
+    for each robot
+      attack it
+      if its dead
+        delete it and shift all the pointers one position back
+        decrease m_nRobots by 1
+        break
+
+    */  
+
+
+
+Player moveOrAttack:
+    cout << dir << ": " << m_row << ", " << m_col << " -- " << new_row << ", " << new_col << endl;
+
+Robot getAttacked:
+    cout << m_row << " :1: " << m_col << endl;
+    cout << m_row << " :2: " << m_col << endl;

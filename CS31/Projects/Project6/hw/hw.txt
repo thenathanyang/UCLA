@@ -1,0 +1,194 @@
+CS 31: PROJECT 6
+
+Nathan Yang
+UID: 404609327
+
+==================================================
+
+PROBLEM 1:
+
+--------------------------------------------------
+
+PROBLEM 1A:
+
+int main()
+{
+    int arr[3] = { 5, 10, 15 };
+    int* ptr = arr;
+
+    *ptr = 30;  			// set arr[0] to 30        
+    *(ptr + 1) = 20;		// Changed from *ptr + 1 to *(ptr + 1); set arr[1] to 20
+    ptr += 2;
+    ptr[0] = 10;			// set arr[2] to 10
+
+    ptr = arr;				// reset ptr to the first element in arr
+    while (ptr < arr + 3)	// Changed from (ptr >= arr) to (ptr < arr + 3)
+    {
+        cout << *ptr << endl;    
+        ptr++;					//Increments ptr
+    }
+}
+
+--------------------------------------------------
+
+PROBLEM 1B:
+
+The function won't do what it was meant to do because int* pToMax is passing by value, not by reference. As a result, although pToMax is changed in the findMax function, it is not changed in the main function and the changes will not be shown when printed in the main function.
+
+void findMax(int arr[], int n, int*& pToMax)		// Declared pToMax as a pointer to a reference 
+{
+    if (n <= 0) 
+        return;      // no items, no maximum!
+    
+    pToMax = arr;
+
+    for (int i = 1; i < n; i++)
+    {
+        if (arr[i] > *pToMax)
+            pToMax = arr + i;
+    }
+}  
+
+--------------------------------------------------
+
+PROBLEM 1C:
+
+In the orignial function, ptr was declared as a pointer that did not point to anything. When computeCude was called, the value of n * n * n was not stored anywhere. When computeCube is called, a segmentation fault resulted. In order for this program to work correctly, an int type must be declared, its address must be passed into computeCube, and the value of the int must be printed out.
+
+int main()
+{
+    int n;				// Declared an int
+    int* ptr = &n;		// Declared a pointer to the address of n
+        
+    computeCube(5, ptr);
+    cout << "Five cubed is " << *ptr << endl;
+}
+
+--------------------------------------------------
+
+PROBLEM 1D:
+
+str1 == str2 will always return false, even if the two C strings are exactly the same. As a result, the program was not comparing characters in the two C strings against each other, thus the not correctly comparing the two C strings. In order to correctly compare the two C strings, the program must compare the characters, which are values pointed to by str1 and str2, at the same indices in the two C strings.
+
+bool strequal(const char str1[], const char str2[])
+{
+    while (*str1 != 0  &&  *str2 != 0)		//Changed from str1 and str2 to *str1 and *str2
+    {
+        if (*str1 != *str2)  	// Changed from str1 != str2 to *str1 != *str2
+            return false;
+        str1++;
+        str2++;
+    }
+    return *str1 == *str2;		// Changed from str1 == str2 to *str1 == *str2
+}
+
+
+--------------------------------------------------
+
+PROBLEM 1E:
+
+The program is unable to correctly print out the integers from the array in getPtrToArray because the array the main function is trying to access is created locally in getPtrToArray. Because the array was declared locally in getPrToArray, the main function cannot access them. As a result, the main function prints out an unwanted integers.
+
+==================================================
+
+PROBLEM 2:
+
+a.) double* cat;
+b.) double mouse[5];
+c.) cat = mouse + 4;
+d.) *cat = 42;			
+e.) *(mouse + 3) = 25;		
+f.) cat -= 3;
+g.) cat[1] = 17;				
+h.) cat[0] = 54;			
+i.) bool b = (*cat == *(cat + 1));		
+j.) bool d = (cat == &mouse[0]);
+
+==================================================
+
+PROBLEM 3:
+
+--------------------------------------------------
+
+PROBLEM 3A:
+
+double mean(const double* scores, int numScores)
+{
+    double tot = 0;
+    for (int k = 0; k < numScores; k++)
+    {
+        tot += *(scores + k);
+    }
+    return tot/numScores;
+}
+
+--------------------------------------------------
+
+PROBLEM 3B:
+
+const char* findTheChar(const char* str, char chr)
+{
+    for (int k = 0; *(str + k) != 0; k++)
+        if (*(str + k) == chr)
+            return (str + k);
+
+    return nullptr;
+}
+
+--------------------------------------------------
+
+PROBLEM 3C:
+
+const char* findTheChar(const char* str, char chr)
+{
+	while (*str != 0)
+	{
+        if (*str == chr)
+            return str;
+        str++;				// Moves onto next character
+	}
+
+    return nullptr;
+}
+
+==================================================
+
+PROBLEM 4:
+
+The program prints 3, 4, 79, -1, 9, 22, and 19 with each number of a new line.
+The program prints 3 because the address of array[5] minus ptr (which is pointing at array[2]) is 3. In other words, array[5] is 3 indices away from array[2].
+The program prints 4 because swap2 caueses the vales at array (or array[0]) and array[2] to be swapped. 4, which was the value at array[2], is now the value at array[0], which is currently being printed.
+The program prints 79 because *(array + 1) sets array[1] from 3 to 79.
+The program prints -1 because *ptr (which was at array[0]) was set to -1 and swap2 caused value at array[0] to be swapped with the value at array[2], thus setting array[2] to -1.
+The program prints 9 because ptr[1] set array[3] to 9. ptr[0] was at array[2] because ptr, which was previously at array[0], was incremented by 2.
+The program prints 22 because 22 was the original value in the array at that position and it was not edited by the program.
+The program prints 19 because 19 was the original value in the array at that position and it was not edited by the program.
+
+==================================================
+
+PROBLEM 5:
+
+void removeS(char* str)
+{
+    char* ptr = str;
+    while(*ptr != '\0')
+    {
+        if(*ptr == 's' || *ptr == 'S')
+        {
+            while(*ptr != '\0')     // Move all characters following the s or S one position to the left
+            {
+                *ptr = *(ptr + 1);      
+                ptr++;
+            }
+            ptr = str;      // Set pointer to beginning of the string
+        }   
+        ptr++;      // Move on to next character in string
+    }
+}
+
+
+
+
+
+
+

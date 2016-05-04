@@ -1,0 +1,20 @@
+void subtract(const Map& m1, const Map& m2, Map& result)
+{
+	KeyType tempKey;		
+	ValueType tempValue;
+
+	for (int j = 0; j < m1.size(); j++)		// inserting m1 into result
+	{
+		m1.get(j, tempKey, tempValue);
+		result.insert(tempKey, tempValue);
+	}
+
+	if (m2 != result)
+	for (int k = 0; k < m2.size(); k++)		// inserting m2 into result
+	{
+		m2.get(k, tempKey, tempValue);
+
+		if (result.contains(tempKey))
+			result.erase(tempKey);
+	}
+}

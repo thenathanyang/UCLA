@@ -1,0 +1,298 @@
+CS 32 Project 2 -- report.txt
+
+Nathan Yang
+ID: 404609327
+
+----------------------------------------
+
+Description of Doubly-Linked List Implementation:
+
+My Node data structure has four members. The four members include they key (m_key), value (m_value), a pointer to the next node in the list (m_next), and a pointer to the previous node in the list (m_prev). I have a head pointer pointing to the first node in the list and a tail pointer pointing to the last node in the list. The first node in the list's previous pointer points to nullptr and the last node in the list's next pointer points to nullptr as well. The nodes are all connected to each other through the next and previous pointers, starting with the node that the head pointer points to and ending with the node that the tail pointer points to, thus making it a doubly-linked list. When a new node is inserted into the list, the node is inserted into the back of the list. Nodes are kept in the order they were inserted in.
+
+----------------------------------------
+
+Pseudocode:
+
+Map::Map();
+	Initialize the head and tial pointers to nullptr and m_pairCounter (size of the linked list) to 0
+
+Map::Map(const Map& other);						// Copy Constructor
+	Reset head, tail, and m_pairCounter
+	Go through the other map
+		Get each key and value from the other map
+		Insert those keys and values into the this map
+
+Map& Map::operator=(const Map& rhs);			// Assignment operator
+	If not this map is not the same as the map on the right hand side (rhs)
+		Make a copy of rhs
+		Swap this map with the copy of the rhs map (setting this map to rhs)
+
+Map::~Map();			// Destructor
+	Creates two pointers (one lead pointer and one following pointer)
+	Initializes the following pointer to the head	
+	Until the lead pointer reaches the end of the list (a nullptr)
+		Set the lead pointer to the following pointer's next pointer
+		Destroy the node at the following pointer
+		Set the following pointer to the lead pointer
+
+bool Map::empty() const;
+	Checks to see whether or not the size of the list is 0
+
+int Map::size() const;
+	Returns the number of key/value pairs in the list
+
+bool Map::insert(const KeyType& key, const ValueType& value);
+	If a key is already in the map,
+		Stop executing the function
+	Otherwise, insert a new Node to the back of a list by:
+		Creating a new Node
+		Setting the key and value in Node to the those passed through the parameter
+		Setting the next pointer to nullptr
+		Setting the previous pointer to the tail
+		Incrementing the pair counter by 1
+		If the node being inserted is the only node in the list,
+			Set head and tail to the new node
+		Otherwise,
+			Set tail's next pointer to the new node
+			Set tail to the new node
+
+bool Map::update(const KeyType& key, const ValueType& value);
+	If the map contains the desired key
+		Find that key's address
+		Update that key's value with the new value
+
+bool Map::insertOrUpdate(const KeyType& key, const ValueType& value);
+	Attempt to update the value in a key
+	If can't update, attempts to insert the key and value
+
+bool Map::erase(const KeyType& key);
+	If the map isn't empty and contains the desired key
+		Set the previous node's next pointer to the next node
+		Set the next node's previous pointer to the previous node
+		Delete the desired node
+		Because the size of the list by 1
+
+bool Map::contains(const KeyType& key) const;
+	Go through the map until desired key is found
+	Returns true if desired key is found
+	Otherwise, return false
+
+bool Map::get(const KeyType& key, ValueType& value) const;
+	If desired key is in the map
+		Get and return the value in that key
+
+bool Map::get(int i, KeyType& key, ValueType& value) const;
+	If 0 <= i < size()
+		Go through each node in the map until the entered integer i is reached
+		Set the key and value parameters to the gathered key and value from the map
+
+void Map::swap(Map& other);
+	If this map and the other map are the same, don't execute the function
+	Otherwise,
+		Exchange the head and tail pointers between the two maps
+		Exchange the key/value pair counter between the two maps
+
+Map::Node* Map::locateNode(const KeyType& key) const;
+	Goes through the map to find desired key and returns its address
+
+bool combine(const Map& m1, const Map& m2, Map& result);
+	Create a temp map to store the result
+	Inserts m1 into the temp map
+	If m1 contains a key from m2
+		If the values are the same, do nothing
+		If the values are different, erase the node with that key from temp map
+	Otherwise, insert the key and value
+	Set result to the temp map
+
+void subtract(const Map& m1, const Map& m2, Map& result);
+	Create a temp map to store the result
+	Get keys and values from m1
+	If a key in m2 is not in m1, insert that key and value into the temp map
+	Set result to the temp map
+
+void Map::dump() const;
+	Goes through the map and prints out all the nodes in the linked list
+
+----------------------------------------
+
+	Map m;
+	ValueType v = -1234.5;
+
+	assert(m.empty());								// Test empty
+	assert(m.size() == 0);							// Test size
+	assert(m.insert("blehh", 123.4));				// Test to see if inserted successfully
+	assert(! m.empty());
+	assert(m.size() == 1);
+	assert(m.contains("blehh"));					// Test contains
+	assert(! m.insert("blehh", 432.1));				// Test to see if unable to insert
+	assert(! m.update("blehh500", 500.5));			// Test to see if fail to update
+	assert(! m.get("abc", v)  &&  v == -1234.5); 	// Test to see if unable to get value; v unchanged by get failure
+	assert(m.get("blehh", v) && v == 123.4);		// Test to see if able to get value successfully
+	assert(m.insert("blehh1", 111.1));
+	assert(m.size() == 2);
+	assert(m.contains("blehh1"));
+	assert(m.update("blehh", 5432.1));				// Test update
+	assert(m.get("blehh", v) && v == 5432.1);		// Test to see if update succeeded
+
+
+	KeyType testKey1;
+	KeyType testKey2;
+
+	ValueType testValue1 = 0;
+	ValueType testValue2 = 0;
+
+	assert(m.get(0, testKey1, testValue1) && testKey1 == "blehh" && testValue1 == 5432.1);			// Test to see if able to get key and value successfully
+	assert(m.get(1, testKey2, testValue2) && testKey2 == "blehh1" && testValue2 == 111.1);
+	assert(! m.get(200, testKey2, testValue2));														// Test to see if unable to get key and value 
+
+
+	ValueType testValue3 = 0;
+
+	Map n;
+	assert(n.empty());
+	assert(n.size() == 0);
+	assert(n.insertOrUpdate("merp", 123.4));		// Test insertOrUpdate (insert aspect)
+	assert(! n.empty());
+	assert(n.size() == 1);
+	assert(n.contains("merp"));
+	assert(! n.insert("merp", 432.1));
+	assert(! n.update("merp500", 500.5));
+	assert(n.insertOrUpdate("merp", -123.4));		// Test inserOrUpdate (update aspect)
+	assert(n.get("merp", testValue3) && testValue3 == -123.4);			// Test to see if successfully updated
+
+	n.swap(m);										// Test swap
+
+	assert(m.contains("merp"));						// Test to see if m and n correctly swapped
+	assert(m.size() == 1);
+	assert(n.contains("blehh"));
+	assert(n.contains("blehh1"));
+	assert(n.size() == 2);
+
+	assert(n.insert("blehh2", 222.2));
+	assert(n.insert("blehh3", 333.3));
+	assert(n.insert("blehh4", 444.4));
+	assert(n.size() == 5);
+
+
+	Map testMap1(n);								// Test copy constructor
+	assert(testMap1.contains("blehh"));
+	assert(testMap1.contains("blehh4"));
+	assert(testMap1.size() == 5);
+
+	testMap1 = m;									// Test assignment operator
+	assert(testMap1.contains("merp"));
+	assert(testMap1.size() == 1);
+
+	Map a(n);
+	assert(a.erase("blehh"));						// Test erase at the front/head
+	assert(! a.contains("blehh"));
+	assert(a.contains("blehh1"));
+	assert(a.size() == 4);
+
+	Map b(n);										// Test erase in the middle
+	assert(b.erase("blehh2"));
+	assert(! b.contains("blehh2"));
+	assert(b.contains("blehh1"));
+	assert(b.contains("blehh4"));
+	assert(b.size() == 4);
+
+	Map c(n);										// Test erase in the middle
+	assert(c.erase("blehh1"));
+	assert(! c.contains("blehh1"));
+	assert(c.contains("blehh"));
+	assert(c.size() == 4);
+
+	Map d(n);										// Test erase at the back/tail
+	assert(d.erase("blehh4"));
+	assert(! d.contains("blehh4"));
+	assert(d.contains("blehh3"));
+	assert(d.size() == 4);
+
+	Map e(m);										// Test erase in an one-element map situation
+	assert(e.size() == 1);
+	assert(e.erase("merp"));
+	assert(! e.contains("merp"));
+	assert(e.empty());
+
+	Map f;											// Test erase in an empty map situation
+	assert(f.size() == 0);
+	assert(! f.contains("sup"));
+	assert(! f.erase("sup"));
+
+
+
+	// Testing combine and subtract
+
+	Map names1;
+	assert(names1.insert("Fred", 123));
+	assert(names1.insert("Ethel", 456));
+	assert(names1.insert("Lucy", 789));
+	assert(names1.size() == 3);
+
+	Map names2;
+	assert(names2.insert("Lucy", 789));
+	assert(names2.insert("Ricky", 321));
+
+	Map names3;
+	assert(names3.insert("Lucy", 654));
+	assert(names3.insert("Ricky", 321));
+
+	Map names4;
+	assert(names4.insert("Fred", 123));
+	assert(names4.insert("Ethel", 456));
+	assert(names4.insert("Lucy", 789));
+
+	Map names5;
+	assert(names5.insert("Lucy", 789));
+	assert(names5.insert("Ricky", 321));
+	assert(names5.insert("Ethel", 654));
+
+	Map namesResult1;									// Test combine
+	assert(namesResult1.insert("random", 40));			// namesResult1 is not empty. After combine, result the result should only include keys from the combined maps.
+	assert(namesResult1.insert("random1", 40.1));
+	assert(namesResult1.size() == 2);
+	assert(combine(names1, names2, namesResult1));		// Combine, only include one key/value pair with the "Lucy" key, and return true
+	cout << "namesResult1:" << endl; 					// "Lucy" key in both maps have the same value
+	namesResult1.dump();
+
+	cout << endl;
+
+	Map namesResult2;									// Test combine
+	assert(! combine(names1, names3, namesResult2));	// Don't include the key/value pair with the "Lucy" key and return false
+	cout << "namesResult2:" << endl; 					// "Lucy" key in both maps have different values
+	namesResult2.dump();
+
+	cout << endl;
+
+	Map namesResult3;									// Test subtract
+	assert(namesResult3.insert("random", 24.5));		// Subtract the maps and only include the key/value pair with the "Fred" key
+	subtract(names4, names5, namesResult3);				// All the other keys are in both maps
+	cout << "namesResult3:" << endl; 					
+	namesResult3.dump();
+
+
+
+	Map g;
+	assert(g.empty());
+	assert(g.insert("ehh", 111.1));
+	assert(g.insert("ehh1", 111.2));
+	assert(g.insert("ehh2", 111.3));
+	assert(! g.insert("ehh2", 111.03));
+	assert(g.insert("ehh3", 111.4));
+	assert(g.size() == 4);
+	
+	Map h;
+	assert(h.empty());							
+	assert(h.insert("uhh", 222.1));	 
+	assert(h.insert("ehh1", 111.2));
+	assert(h.insert("ehh2", 222.03));
+	assert(h.insert("uhh1", 222.2));
+	assert(h.insert("uhh2", 222.3));
+	assert(h.size() == 5);
+
+	Map i;
+	assert(i.empty());					
+	assert(! combine(g, h, i));			// Test to see if return false when keys with different values are attempted to be combined
+
+
+

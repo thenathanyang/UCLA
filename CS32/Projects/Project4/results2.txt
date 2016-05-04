@@ -1,0 +1,31 @@
+bbbbb.exe
+ccccc.exe
+http://www.bad.com
+http://www.bar.com/bletch
+http://www.boo.edu/abc
+http://www.foo.com/bar
+qqqqqa.exe
+qqqqqb.exe
+qqqqqc.exe
+qqqqqd.exe
+qqqqqf.exe
+qqqqqg.exe
+qqqqqh.exe
+
+m1 http://www.foo.com/bar qqqqqa.exe
+m1 qqqqqa.exe qqqqqb.exe
+m1 qqqqqb.exe http://www.bar.com/bletch
+m1 qqqqqb.exe qqqqqc.exe
+m2 qqqqqd.exe http://www.bar.com/bletch
+m2 qqqqqd.exe qqqqqf.exe
+m2 qqqqqf.exe http://www.boo.edu/abc
+m3 explorer.exe qqqqqa.exe
+m3 http://www.boo.edu/abc qqqqqg.exe
+m3 qqqqqg.exe qqqqqh.exe
+m3 qqqqqh.exe http://google.com
+m5 explorer.exe qqqqqa.exe
+m5 qqqqqa.exe qqqqqb.exe
+m6 bbbbb.exe http://www.bad.com
+m10 http://google.com qqqqqd.exe
+m10 qqqqqh.exe http://google.com
+m11 ccccc.exe http://www.bad.com

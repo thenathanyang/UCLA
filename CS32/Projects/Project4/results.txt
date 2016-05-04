@@ -1,0 +1,6 @@
+bbbbb.exe
+ccccc.exe
+http://www.bad.com
+
+m6 bbbbb.exe http://www.bad.com
+m11 ccccc.exe http://www.bad.com

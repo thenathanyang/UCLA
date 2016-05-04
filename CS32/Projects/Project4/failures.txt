@@ -1,0 +1,181 @@
+From DiskMultiMap::erase:
+
+if (currNode.nodePos == bucket.firstNodePos)		// First Node
+{
+	if (!strcmp(currNode.key, key.c_str()) && !strcmp(currNode.value, value.c_str()) && !strcmp(currNode.context, context.c_str()))
+	{
+		bucket.firstNodePos = currNode.nextNode;
+		if (currNode.nodePos == bucket.lastNodePos) bucket.lastNodePos = 0;	// Only node
+	
+		bucket.numNodes--;
+		header.numDelNodes++;
+		if (header.numDelNodes == 1)
+		{
+			header.firstDelNode = currNode.nodePos;
+			header.lastDelNode = currNode.nodePos;
+			currNode.nextNode = 0;
+		}
+		else 
+		{
+			DiskMultiMapNode prevNode = readNode(header.lastDelNode);
+			prevNode.nextNode = currNode.nextNode;
+			updateNode(prevNode);
+			header.lastDelNode = currNode.nodePos;
+		}	
+
+		// header.delPos[header.numInDelPos] = currNode.nodePos;
+		// header.numInDelPos++;
+		
+		numRemoved++;
+		updateBucket(bucket);
+		updateHeader(header);
+	}
+}
+
+// while (currNode.nextNode != 0)
+while (currNode.nextNode != bucket.lastNodePos)		// All other nodes
+{
+	DiskMultiMapNode nextNode = readNode(currNode.nextNode);
+	//bf.read(nextNode, currNode.nextNode)
+	if (!strcmp(nextNode.key, key.c_str()) && !strcmp(nextNode.value, value.c_str()) && !strcmp(nextNode.context, context.c_str()))
+	{
+		currNode.nextNode = nextNode.nextNode;
+		updateNode(currNode);
+		currNode = readNode(currNode.nodePos);
+
+		bucket.numNodes--;
+		header.numDelNodes++;
+		if (header.numDelNodes == 1)
+		{
+			header.firstDelNode = nextNode.nodePos;
+			header.lastDelNode = nextNode.nodePos;
+			nextNode.nextNode = 0;
+		}
+		else 
+		{
+			DiskMultiMapNode prevNode = readNode(header.lastDelNode);
+			prevNode.nextNode = nextNode.nodePos;
+			updateNode(prevNode);
+			header.lastDelNode = nextNode.nodePos;
+		}
+
+		// header.delPos[header.numInDelPos] = nextNode.nodePos;
+		// header.numInDelPos++;
+		
+		numRemoved++;
+		updateBucket(bucket);
+		updateHeader(header);
+	}
+	else currNode = readNode(currNode.nextNode);
+}
+
+if (currNode.nextNode == bucket.lastNodePos)		// Last node
+{
+	DiskMultiMapNode nextNode = readNode(currNode.nextNode);
+	//bf.read(nextNode, currNode.nextNode);
+	if (!strcmp(nextNode.key, key.c_str()) && !strcmp(nextNode.value, value.c_str()) && !strcmp(nextNode.context, context.c_str()))
+	{
+		currNode.nextNode = 0;
+		bucket.lastNodePos = currNode.nodePos;
+		updateNode(currNode);
+
+		bucket.numNodes--;
+		header.numDelNodes++;
+		if (header.numDelNodes == 1)
+		{
+			header.firstDelNode = nextNode.nodePos;
+			header.lastDelNode = nextNode.nodePos;
+		}
+		else header.lastDelNode = nextNode.nodePos;
+
+		// header.delPos[header.numInDelPos] = nextNode.nodePos;
+		// header.numInDelPos++;
+
+		numRemoved++;
+		updateBucket(bucket);
+		updateHeader(header);
+	}
+}
+
+return numRemoved;
+
+
+
+
+
+
+
+
+
+DiskMultiMap::DiskMultiMapHeader DiskMultiMap::readHeader()
+{
+	DiskMultiMapHeader header;
+	bf.read(header, 0);				// CORRECT?!?!?!
+	return header;
+}
+
+
+
+
+
+
+std::set<std::string> badEntitiesSet;
+for (std::vector<std::string>iterator it = indicators.begin(); it != indicators.end(); it++)
+	badEntitiesSet.insert((*it));
+
+DiskMultiMap::Iterator fwIt;
+DiskMultiMap::Iterator bwIt;
+for (std::set<std::string>iterator it = badEntitiesSet.begin(); it != badEntitiesSet.end(); it++)
+{
+	fwIt = dmm_forward.search((*it));
+	bwIt = dmm_backward.search((*it));
+
+	while ()
+}
+
+
+
+DiskMultiMap::Iterator prevalIt = dmm_prevalence.search(key);
+string prevalStrValue = (*prevalIt).value;
+int prevalIntValue;
+if (prevalStrValue == "") 
+{
+	prevalStrValue = "1";
+	dmm_prevalence.erase(key, "", "");
+	dmm_prevalence.insert(key, prevalStrValue, "");
+}
+else
+{
+	prevalIntValue = stoi(prevalStrValue);
+	prevalIntValue++;
+	dmm_prevalence.erase(key, prevalStrValue, "");
+	prevalStrValue = to_string(prevalIntValue);
+	dmm_prevalence.insert(key, prevalStrValue, "");
+}
+
+
+
+
+
+
+
+
+Delete 30:
+50
+	20
+		10
+			xx
+			15
+		40
+  			25
+  				xx
+  				35
+  			xx
+	60
+		xx
+		70
+			65
+			80
+				75
+				xx
+

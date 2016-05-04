@@ -1,0 +1,99 @@
+UCLA CS 32: Project 4 -- report.txt
+
+Nathan Yang
+ID: 404609327
+
+----------------------------------------
+
+1. BUGS OR OTHER PROBLEMS
+
+I have attempted to implement all of the project's functionality. Any bugs I encountered while testing my project have been fixed. As a result, I currently do not know of any bugs or problems in my classes. 
+
+----------------------------------------
+
+2. HIGH LEVEL DESCRIPTIONS
+
+===== DiskMultiMap =====
+
+bool createNew(const std::string& filename, unsigned int numBuckets);
+	Creates a new binary file file with a specified name by creating and writing a header and a specified number of buckets into the binary file. The header contains information about the number of buckets in the DiskMultiMap, number of deleted nodes, and offsets to the first and last deleted nodes. A bucket contains information about the number of nodes and offsets to the first and last nodes in that bucket.
+
+bool openExisting(const std::string& filename);
+	Closes an already opened binary file if there is one then opens an existing binary file with the specified name and reads it header.
+
+void close();
+	Closes the binary file.
+
+bool insert(const std::string& key, const std::string& value, const std::string& context);
+	The function first locates the correct bucket to insert a new node into. Then a node with the specified key, value, and context information is created. The node is then inserted at either the offset of a previously deleted node or at the end of the binary file. If applicable, update the bucket's "pointers" to the first node and last node and the previous node's next pointer to point at the current node. 
+
+Iterator search(const std::string& key);
+	The function first locates the correct bucket to search for a node in then goes through all the nodes in that bucket until it finds a node with the specified key and returns an iterator to that node. 
+
+int erase(const std::string& key, const std::string& value, const std::string& context);
+	The function first locates the correct bucket to erase a node in and pushes all the nodes in that bucket into a vector. Then the function goes through that vector and deletes any node that matches the passed in values to be erased. After, the leftover nodes' next "pointers" are updated with the correct offsets and all the leftover nodes are rewritten into the bucket.
+
+unsigned long hash(const std::string& str);
+	Returns a unique value for each passed in string.
+
+struct DiskMultiMapHeader;
+	A header structure contains information about the number of buckets, number of deleted nodes, and offsets to the first and last deleted nodes.
+
+struct DiskMultiMapBucket;
+	A bucket structure contains information about the number of nodes in that bucket, the bucket's position, and offsets to the first and last nodes in that bucket.
+
+struct DiskMultiMapNode;
+	A node structure that contains information about the node's position, the offset of the next node, and data for a key, value, and context.
+
+
+===== Iterator =====
+	
+Iterator(std::list<MultiMapTuple> tupleList);
+	Constructor for an Iterator object that takes in a list of MultiMapTuples and sets the private member variable list of MultiMapTuples to the passed in list.
+
+bool isValid() const;
+	Returns whether or not an Iterator is valid by checking to see if the Iterator has values of MultiMapTuples.
+
+Iterator& operator++();
+	If an Iterator is not valid, the operator returns a pointer to itself. Otherwise, the front of the MultiMapTuple list is popped and a pointer to itself is returned.
+
+MultiMapTuple operator*();
+	If an Iterator is not valid, the operator returns an empty MultiMapTuple. Otherwise, the operator returns a MultiMapTuple containing data from the MultiMapTuple at the front of the MultiMapTuple list.
+
+
+===== IntelWeb =====
+
+bool createNew(const std::string& filePrefix, unsigned int maxDataItems);
+	Creates three new DiskMultiMap data structures with a specified number of buckets. The load factor I used was 0.6. The three DiskMultiMaps I used mapped a key to a value (forward DiskMultiMap), a value to a key (backward DiskMultiMap), and a key/value to a prevalence counter (prevalence DiskMultiMap).
+
+bool openExisting(const std::string& filePrefix);
+	Opens existing DiskMultiMap files.
+
+void close();
+	Closes DiskMultiMap files.
+
+bool ingest(const std::string& telemetryFile);
+	Takes in a telemetry file, reads each line of the telemetry file, and inserts the information from each line into the forward, backward, and prevalence DiskMultiMaps.
+
+unsigned int crawl(const std::vector<std::string>& indicators, unsigned int minPrevalenceToBeGood, std::vector<std::string>& badEntitiesFound, std::vector<InteractionTuple>& badInteractions)
+	Pushes all the indicators into a queue of items to be searched. While the queue of items to be searched is not empty, it takes the item at the top of the queue and if that item has not been visited yet, it searches for that item in the forward and backward DiskMultiMaps and, if the prevalence requirements are met, inserts that item and its associated information into data structures that keep track of bad entities and bad interactions.
+
+bool purge(const std::string& entity);
+	The function first pushes the entity to be purged into a queue of items to be purged. While the queue of items to be purged is not empty, the function takes the item at the top of the queue, searches through the forward and backward DiskMultiMaps for that item, removes that item from those maps, and pushes any references to the item found in the DiskMultiMaps into the queue of items to be purged.
+
+void insertPrevalence(const string& item);
+	Updates the prevalence value of a specified item in the prevalence DiskMultiMap.
+
+bool operator<(const InteractionTuple& lhs, const InteractionTuple& rhs);
+	Overloads the < operator so that InteractionTuples can be compared first by their context, second by their from field, and third by their to field.
+
+bool operator==(const InteractionTuple& lhs, const InteractionTuple& rhs);
+	Overloads the == operator to check that InteractionTuples on both the left and right hand side of the == operator both have the same context, to, and from values.
+
+----------------------------------------
+
+3. BIG-O REQUIREMENTS
+
+My functions/methods satisfies the big-O requirements.
+
+

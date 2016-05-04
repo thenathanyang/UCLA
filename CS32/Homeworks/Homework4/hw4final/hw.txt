@@ -1,0 +1,35 @@
+UCLA CS 32: Homework 4 -- hw.txt
+
+Nathan Yang
+ID: 404609327
+
+----------------------------------------
+
+Problem 2:
+
+The call to Map<Coord, int>::insert causes a compilation error because no equality operator to compare the Coord class has been implemented. The Coord class is the key type in this situation and the find function tries to compare the keys with the "!=" operator, but is unable to because the comparison operator has not been implemented. 
+
+----------------------------------------
+
+Problem 3b:
+
+The one-parameter listAll function does not show where a class is derived from. The path parameter in the two-parameter listAll function allows the function to recall the classes from which the current class was derived.
+
+----------------------------------------
+
+Problem 4a:
+
+The time complexity of the algorithm is O(N^3) because there are three nested for loops. Each for loop has a time complexity of O(N). There are no major restrictions that would stop one of the for loops from running.
+
+
+Problem 4b:
+
+The time complexity of the algorithm is O(N^3) again because even though N is changed to i in the second for loop, the first two for loops will have a time complexity of O(N^2). The third nested for loop will change the time complexity to O(N^3) because it will also run N times.
+
+----------------------------------------
+
+Problem 5:
+
+The time complexity of the algorithm is O(N^2). The for loop has a time complexity of O(N) and the get and insert functions within the for loop have a time complexity of O(N) as well, making the time complexity of the whole algorithm O(N^2).
+
+

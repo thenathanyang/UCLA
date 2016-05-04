@@ -1,0 +1,131 @@
+UCLA CS 32: Homework 4 -- hw.txt
+
+Nathan Yang
+ID: 404609327
+
+========================================
+
+--- Problem 1a ---
+
+50
+	20
+		10
+			xx
+			15
+		40
+  			30
+  				25
+  				35
+  			xx
+	60
+		xx
+		70
+			65
+			80
+				75
+				xx
+
+
+--- Problem 1b ---
+
+50
+	15
+		10
+		40
+  			25
+  				xx
+  				35
+  			xx
+	60
+		xx
+		70
+			65
+			80
+				75
+				xx
+
+
+--- Problem 1c ---		
+
+In-order: 10 15 20 25 30 35 40 50 60 65 70 75 80
+
+Pre-order: 50 20 10 15 40 30 25 35 60 70 65 80 75
+
+Post-order: 15 10 25 35 30 40 20 65 75 80 70 60 50
+
+========================================
+
+--- Problem 2a ---
+
+7
+	3
+		1
+		2
+	5
+		4
+		xx
+
+
+--- Problem 2b ---
+
+7 3 5 1 2 4
+
+
+--- Problem 2c ---
+
+5 3 4 1 2
+
+========================================
+
+--- Problem 3a ---
+
+struct TreeNode
+{
+	int data;
+	TreeNode* parent;
+	TreeNode* leftChild;
+	TreeNode* rightChild;
+}
+
+--- Problem 3b ---
+
+Insert a "data" into a BST:
+if tree is empty
+	set parent to a new TreeNode;
+	set parent's data to passed in data
+currentNode = parent;
+while node not inserted yet
+	if data == currentNode->data
+		node already inserted (set node to inserted);
+	if data < currentNode->data
+		if there is leftChild
+			follow the leftChild pointer;
+		else
+			create a new TreeNode (newNode);
+			set newNode's data to passed in data;
+			parent = currentNode;
+			currentNode->leftChild = newNode;
+			set node to inserted;
+	if data > currentNode->data
+		if there is rightChild
+			follow the rightChild pointer;
+		else
+			create a new TreeNode (newNode);
+			set newNode's data to passed in data;
+			parent = currentNode;
+			currentNode->rightChild = newNode;
+			set node to inserted;
+
+========================================
+
+--- Problem 4 ---
+
+a.) O(C + S)
+b.) O(logC + S)
+c.) O(logC + logS)
+d.) O(1 + logS)
+e.) O(1)
+f.) O(logC + S) 	
+g.) O(1 + SlogS + S)		
+h.) O(ClogS)		
+

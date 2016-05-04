@@ -1,0 +1,42 @@
+UCLA CS 32: Homework 2 -- hw.txt
+
+Nathan Yang
+ID: 404609327
+
+----------------------------------------
+
+Problem 2:
+
+01.) (6,4)
+02.) (6,3)
+03.) (6,5)
+04.) (7,5)
+05.) (8,5)
+06.) (8,6)
+07.) (8,7)
+08.) (8,8)
+09.) (7,8)
+10.) (6,6)
+11.) (5,4)
+12.) (4,4)
+
+----------------------------------------
+
+Problem 4:
+
+01.) (6,4)
+02.) (5,4)
+03.) (6,5)
+04.) (6,3)
+05.) (4,4)
+06.) (6,6)
+07.) (7,5)
+08.) (3,4)
+09.) (4,5)
+10.) (8,5)
+11.) (2,4)
+12.) (4,6)
+
+The stack algorithm looks at the coordinates most recently pushed onto the stack while the queue algorithm looks at the coordinates in order of how they were enqueued into the queue. All of the stack algorithm's insertions and deletions happen on the same end while the queue's algorithm's insertions and deletions happen on opposite ends.
+
+

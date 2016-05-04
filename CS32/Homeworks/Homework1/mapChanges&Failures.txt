@@ -1,0 +1,156 @@
+// Map.cpp
+
+#include "Map.h"
+
+#include <iostream>
+using namespace std;
+
+Map::Map()
+{	
+	pairCounter = 0;
+}
+
+bool Map::empty() const
+{
+	if (size() == 0)
+		return true;
+	return false;
+}
+
+int Map::size() const
+{
+	return pairCounter;
+}
+
+bool Map::insert(const std::string& key, const double& value)
+{
+	if (size() >= DEFAULT_MAX_ITEMS || contains(key))
+		return false;
+
+	pair[size()].key = key;
+	pair[size()].value = value;
+	pairCounter++;
+
+	return true;
+}
+
+bool Map::update(const std::string& key, const double& value)
+{
+	for (int k = 0; k < size(); k++)
+		if (key == pair[k].key)
+		{
+			pair[k].value = value;
+			return true;
+		}
+
+	return false;
+}
+
+bool Map::insertOrUpdate(const std::string& key, const double& value)		// CORRECT?!?!
+{
+	if (update(key, value))
+		return true;
+	return insert(key, value);
+}
+
+bool Map::erase(const std::string& key)
+{
+	for (int k = 0; k < size(); k++)
+		if (key == pair[k].key)
+		{
+			pair[k] = pair[size()-1];
+			pairCounter--;
+			return true;
+		}
+	return false;
+}
+
+bool Map::contains(const std::string& key) const
+{
+	for (int k = 0; k < size(); k++)
+		if (key == pair[k].key)
+			return true;
+	return false;
+}
+
+bool Map::get(const std::string& key, double& value) const
+{
+	for (int k = 0; k < size(); k++)
+		if (key == pair[k].key)
+		{
+			value = pair[k].value;
+			return true;
+		}
+
+	return false;
+}
+
+bool Map::get(int i, std::string& key, double& value) const
+{
+	if (i >= 0 && i < size())
+	{
+		key = pair[i].key;
+		value = pair[i].value;
+		return true;
+	}
+
+	return false;
+}
+
+void Map::swap(Map& other)
+{
+	int largerSize = size();
+	if (other.size() > size())
+		largerSize = other.size();
+
+	for (int k = 0; k < largerSize; k++)
+	{
+		mapPair tempPair = pair[k];
+		pair[k] = other.pair[k];
+		other.pair[k] = tempPair;
+	}
+
+	int tempPairCounter = pairCounter;
+	pairCounter = other.pairCounter;
+	other.pairCounter = tempPairCounter;
+}
+
+
+
+
+
+string r(int k) {
+	string s;
+	while (k > 0) {
+		s += ('0' + (k % 10));
+		k /= 10;
+	}
+
+	//2
+	//s=2   begin = 2;
+	//k=0   
+    //
+
+	//12
+	//s=2   end=1
+	//k=1;
+	//s=1
+	//k=0
+
+	//4798
+	//s=8
+	//k=479
+	//s=89
+	//k=47
+	//s=897
+	//k=4
+	//s=8974
+	//4798
+
+	reverse(s.begin(),s.end());
+	return s;
+}
+
+
+
+
